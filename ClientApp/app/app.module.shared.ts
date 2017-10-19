@@ -1,8 +1,11 @@
+import { FeatureService } from './services/feature.service';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
+import { MakeSevice } from './services/make.service';
 
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -32,6 +35,10 @@ import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.com
             { path: 'fetch-data', component: FetchDataComponent },
             { path: '**', redirectTo: 'home' }
         ])
+    ],
+    providers: [
+        MakeSevice, 
+        FeatureService
     ]
 })
 export class AppModuleShared {

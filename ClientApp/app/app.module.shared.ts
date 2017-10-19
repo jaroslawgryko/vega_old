@@ -1,11 +1,10 @@
-import { FeatureService } from './services/feature.service';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 
-import { MakeSevice } from './services/make.service';
+import { VehicleSevice } from './services/vehicle.service';
 
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -37,8 +36,7 @@ import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.com
         ])
     ],
     providers: [
-        MakeSevice, 
-        FeatureService
+        VehicleSevice
     ]
 })
 export class AppModuleShared {

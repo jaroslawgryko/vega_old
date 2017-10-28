@@ -14,11 +14,10 @@ namespace vega.Controllers
     {
         private readonly IMapper mapper;
         private readonly IVehicleRepository repository;
-
-        public VegaDbContext context { get; }
-        public VehiclesController(IMapper mapper, VegaDbContext context, IVehicleRepository  repository)
+        private readonly IUnitOfWork unitOfWork;
+        public VehiclesController(IMapper mapper, IVehicleRepository repository, IUnitOfWork unitOfWork)
         {
-            this.context = context;
+            this.unitOfWork = unitOfWork;
             this.repository = repository;
             this.mapper = mapper;
         }
@@ -41,7 +40,7 @@ namespace vega.Controllers
             vehicle.LastUpdate = DateTime.Now;
 
             repository.Add(vehicle);
-            await context.SaveChangesAsync();            
+            await unitOfWork.CompleteAsync();
 
             vehicle = await repository.GetVehicle(vehicle.Id);
 
@@ -58,29 +57,29 @@ namespace vega.Controllers
 
             var vehicle = await repository.GetVehicle(id);
 
-            if(vehicle == null)
+            if (vehicle == null)
                 return NotFound();
 
             mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource, vehicle);
             vehicle.LastUpdate = DateTime.Now;
 
-            await context.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
 
             var result = Mapper.Map<Vehicle, VehicleResource>(vehicle);
 
             return Ok(result);
         }
-        
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVehicle(int id)
         {
             var vehicle = await repository.GetVehicle(id, includeRelated: false);
 
-            if(vehicle == null)
+            if (vehicle == null)
                 return NotFound();
 
             repository.Remove(vehicle);
-            await context.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
 
             return Ok(id);
         }
@@ -90,8 +89,8 @@ namespace vega.Controllers
         {
             var vehicle = await repository.GetVehicle(id);
 
-            if(vehicle == null)
-              return NotFound();
+            if (vehicle == null)
+                return NotFound();
 
             var vehicleResource = mapper.Map<Vehicle, VehicleResource>(vehicle);
 
